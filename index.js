@@ -36,9 +36,25 @@ const applyCollection = client.db('applyDB').collection('apply');
     app.get('/jobCetagory',async(req,res)=>{
       const jobs = jobCetagoryCollection.find()
       const result = await jobs.toArray();
+      // result.map(async (rs)=>{
+      //   const applyCount = await applyCollection.find({
+      //     $where:{
+            
+      //     }
+      //   })
+      // });
       res.send(result)
     })
 
+    //add job category from
+    app.post("/jobCetagory",async(req,res)=>{
+      const addJob = req.body;
+      console.log(addJob);
+      const result = await jobCetagoryCollection.insertOne(addJob)
+      console.log(result);
+      res.send(result)
+
+    })
     //add apply from
     app.post("/apply",async(req,res)=>{
       const applyCard = req.body;
@@ -46,6 +62,7 @@ const applyCollection = client.db('applyDB').collection('apply');
       const result = await applyCollection.insertOne(applyCard)
       console.log(result);
       res.send(result)
+
     })
 
     //read apply from
