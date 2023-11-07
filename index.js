@@ -29,13 +29,32 @@ async function run() {
     // await client.connect();
 
 const jobCetagoryCollection = client.db('jobCetagoryDB').collection('jobCetagory');
+const applyCollection = client.db('applyDB').collection('apply');
     // Send a ping to confirm a successful connection
+
     //Job cetagory read
     app.get('/jobCetagory',async(req,res)=>{
       const jobs = jobCetagoryCollection.find()
       const result = await jobs.toArray();
       res.send(result)
     })
+
+    //add apply from
+    app.post("/apply",async(req,res)=>{
+      const applyCard = req.body;
+      console.log(applyCard);
+      const result = await applyCollection.insertOne(applyCard)
+      console.log(result);
+      res.send(result)
+    })
+
+    //read apply from
+    app.get('/apply',async(req,res)=>{
+      const apply = applyCollection.find()
+      const result = await apply.toArray();
+      res.send(result)
+    })
+
     // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
