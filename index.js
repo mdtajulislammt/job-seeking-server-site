@@ -2,7 +2,7 @@
 const express = require('express');
 const  cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -70,6 +70,16 @@ const applyCollection = client.db('applyDB').collection('apply');
       const apply = applyCollection.find()
       const result = await apply.toArray();
       res.send(result)
+    })
+
+    //myJob  post delete
+    app.delete("/jobCetagory/:id", async (req, res) =>{
+      const id = req.params.id;
+       const query = {
+        _id: new ObjectId(id),
+       }
+       const result = await jobCetagoryCollection.deleteOne(query);
+       res.send(result);
     })
 
     // await client.db("admin").command({ ping: 1 });
