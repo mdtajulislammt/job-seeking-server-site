@@ -101,7 +101,7 @@ async function run() {
       console.log(applyCard);
       const result = await applyCollection.insertOne(applyCard);
        await jobCetagoryCollection.updateOne(
-        { _id: applyCard._id },
+        { _id: applyCard.postId },
         { $inc: { applicantsNumber: 1 } }
       );
       res.send(result);
