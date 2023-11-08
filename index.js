@@ -1,13 +1,17 @@
 
 const express = require('express');
 const  cors = require('cors');
-require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
 //middleware
-app.use(cors());
+app.use(cors({
+  origin:['http://localhost:5173'],
+  credentials:true
+}));
 app.use(express.json());
 
 
@@ -32,6 +36,21 @@ const jobCetagoryCollection = client.db('jobCetagoryDB').collection('jobCetagory
 const applyCollection = client.db('applyDB').collection('apply');
     // Send a ping to confirm a successful connection
 
+
+    // auth related api 
+    app.post('/jwt',async(req, res)=>{
+      const user = req.query
+      console.log('user token', user)
+      const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'2h'})
+
+      res
+      .cookie('token', token,{
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+      })
+      .send({success:true})
+    })
     //Job cetagory read
     app.get('/jobCetagory',async(req,res)=>{
       const jobs = jobCetagoryCollection.find()
