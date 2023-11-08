@@ -82,6 +82,30 @@ const applyCollection = client.db('applyDB').collection('apply');
        res.send(result);
     })
 
+    // update My post  
+    app.put("/jobCetagory/:id",async(req,res)=>{
+      const id = req.params.id;
+      const data = req.body;
+      const options = {upset: true};
+      const filter = {
+        _id: new ObjectId(id),
+       }
+      const updateJob = {
+        $set:{
+          name:data.name,
+          jobTitle:data.jobTitle,
+          category:data.category,
+          deadline:data.deadline,
+          postingDate:data.postingDate,
+          salaryRange:data.salaryRange,
+          description:data.description,
+          img:data.img,
+        }
+      }
+      const result = await jobCetagoryCollection.updateOne(filter,updateJob,options);
+      res.send(result);
+    })
+
     // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
