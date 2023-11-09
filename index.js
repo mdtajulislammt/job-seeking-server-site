@@ -10,7 +10,11 @@ const port = process.env.PORT || 5000;
 //middleware
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: [
+      "http://localhost:5173",
+      "https://searching-jobs.web.app",
+      "https://searching-jobs.firebaseapp.com"
+  ],
     credentials: true,
   })
 );
@@ -96,22 +100,25 @@ async function run() {
       res.send(result);
     });
     //add apply from
-    app.post("/apply", logger,  async (req, res) => {
+   
+      app.post("/apply", logger,  async (req, res) => {
       const applyCard = req.body;
-      console.log(applyCard);
-      const result = await applyCollection.insertOne(applyCard);
-       await jobCetagoryCollection.updateOne(
-        { _id: applyCard.postId },
-        { $inc: { applicantsNumber: 1 } }
-      );
+    const result = await applyCollection.insertOne(applyCard);
+    jobCetagoryCollection.updateOne(
+      { _id: new ObjectId(applyCard.postId) },
+      { $inc: { applicantsNumber: 1 } }
+    )
+    console.log('LOg result',applyCard.postId);
       res.send(result);
-    });
+    }); 
+  
 
     //read apply from
     app.get("/apply", logger, async (req, res) => {
       
       const apply = applyCollection.find();
       const result = await apply.toArray();
+     
       res.send(result);
     });
 
